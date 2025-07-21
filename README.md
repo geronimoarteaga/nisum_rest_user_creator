@@ -5,25 +5,6 @@ Este proyecto fue creado usando SpringBoot con Java.
 Expone una API RESTful de creación de usuarios cuyos endpoints aceptan y retornan
 solamente JSON, inclusive para los mensajes de error.
 
-## Registro de Usuario
-
-Ese endpoint debe recibir un usuario con los campos "nombre", "correo",
-"contraseña", más un listado de objetos "teléfono", respetando el siguiente
-formato:
-```
-    {
-        "name": "Juan Rodriguez",
-        "email": "juan@rodriguez.org",
-        "password": "hunter2",
-        "phones": [
-            {
-            "number": "1234567",
-            "citycode": "1",
-            "contrycode": "57"
-            }
-        ]
-    }
-```
 
 ## Construcción y Ejecución
 
@@ -47,3 +28,80 @@ Si el servidor se inicia correctamente, se mostrara la siguiente salida :
 Una vez ejecutandose la aplicación se puede visualizar el Swagger en http://localhost:8080/swagger-ui/index.html
 o descargar el JSON de OpenAPI mediante http://localhost:8080/v3/api-docs e importar en una
 herramienta como [POSTMAN](https://www.postman.com/).
+
+### Registro de Usuario
+
+Este endpoint debe recibir un nuevo usuario con los campos "nombre", "correo",
+"contraseña", más un listado de objetos "teléfono", respetando el siguiente
+formato:
+```
+    POST http://localhost:8080/api/v1/users
+    Content-Type: application/json
+    {
+        "name": "Juan Rodriguez",
+        "email": "juan@rodriguez.org",
+        "password": "Hunter23",
+        "phones": [
+            {
+            "number": "1234567",
+            "citycode": "1",
+            "contrycode": "57"
+            }
+        ]
+    }
+```
+```
+    curl --location 'http://localhost:8080/api/v1/users' \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "name": "Juan Rodriguez",
+        "email": "juan@rodriguez.org",
+        "password": "Hunter23",
+        "phones": [
+            {
+            "number": "1234567",
+            "citycode": "1",
+            "contrycode": "57"
+            }
+        ]
+    }'
+```
+
+### Login de Usuario
+
+Este endpoint debe recibir un usuario registrado con los campos "correo" y
+"contraseña", respetando el siguiente  formato:
+```
+    POST http://localhost:8080/api/v1/login
+    Content-Type: application/json
+    {
+        "username": "juan@rodriguez.org",
+        "password": "Hunter23"
+    }
+```
+```
+    curl --location 'http://localhost:8080/api/v1/login' \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "username": "juan@rodriguez.org",
+        "password": "Hunter23"
+    }'
+```
+Si el login del usuario se inicia correctamente, devolverá un token JWT como 
+respuesta similar al siguiente:
+```
+    eyJhbGciOiJIUzI1NiJ9...
+```
+
+### Listado de Usuarios
+
+Este endpoint debe utilizar el token JWT obtenido en el login, respetando el siguiente  formato:
+```
+    GET http://localhost:8080/api/v1/users
+    Content-Type: application/json
+    Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+```
+```
+    curl --location 'http://localhost:8080/api/v1/users' \
+    --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...'
+```
