@@ -10,12 +10,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,7 +27,10 @@ public class UserController {
 
     private final UserInfoService userInfoService;
 
-    @Operation(summary = "Listar usuarios creados")
+    private final PasswordEncoder encoder;
+
+    @Operation(summary = "Listar usuarios creados", description = "Se reequiere un token JWT para esta operación")
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(path = "/users", produces = {"application/json"})
     public ResponseEntity<List<UserInfo>> getAllUsers() {
         return ResponseEntity.ok().body(userInfoService.getAll());
@@ -45,6 +50,7 @@ public class UserController {
     @PostMapping(path = "/users", consumes = {"application/json"}, produces = {"application/json"})
     public ResponseEntity<UserInfo> createUser(@RequestBody @Valid UserRequestDTO userDTO) {
         try {
+            userDTO.setPassword(encoder.encode(userDTO.getPassword()));
             return new ResponseEntity<>(userInfoService.create(userDTO), HttpStatus.CREATED);
         } catch (Exception exception) {
             throw new UserEmailExistException("Correo ya registrado");

@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +25,12 @@ public class UserCreationMockTests {
     @Mock
     private UserInfoService userInfoService;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private UserController userController;
+
 
     @Test
     public void returnAllUserEmptySuccess() {
@@ -51,6 +56,8 @@ public class UserCreationMockTests {
 
         when(userInfoService.create(userRequest))
                 .thenReturn(userInfo);
+        when(passwordEncoder.encode(userRequest.getPassword()))
+                .thenReturn("");
 
         // When ...
         ResponseEntity<UserInfo> response = userController.createUser(userRequest);

@@ -11,4 +11,6 @@ public interface UserInfoService {
 
     UserInfo create(UserRequestDTO userDTO);
 
+    UserInfo findByUsername(String email);
+
 }

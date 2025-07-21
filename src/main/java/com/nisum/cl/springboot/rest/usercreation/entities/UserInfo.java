@@ -1,8 +1,8 @@
 package com.nisum.cl.springboot.rest.usercreation.entities;
 
+import javax.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,7 +17,6 @@ import java.util.UUID;
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(schema = "NISUM_SCHEMA")
 public final class UserInfo
         implements Serializable {
 
@@ -28,10 +27,12 @@ public final class UserInfo
     @EqualsAndHashCode.Include
     private long id;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
     @Column(nullable = false)
     private String name;
-    @Column(unique = true)
-    private String email;
+
     @Column
     private String password;
 

@@ -39,4 +39,9 @@ public class UserInfoServiceImpl
         return userInfoRepository.save(user);
     }
 
+    @Override
+    public UserInfo findByUsername(String email) {
+        return userInfoRepository.findByEmail(email);
+    }
+
 }
